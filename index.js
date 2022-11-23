@@ -8,9 +8,13 @@ const io = require("socket.io")(3001, {
     }
 });
 
-const port = 443;
+const port = 3000;
 
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://aritec:1q2w3e4r5t@cluster0.3neia.mongodb.net/?retryWrites=true&w=majority";
+const client = new MongoClient(uri);
 
+const database = client.db("aritec");
 
 app.get("/",function(req,res){
     res.sendFile(path.join(__dirname, 'web/index.html'));
@@ -30,6 +34,9 @@ app.get('/api/webhook', (req, res) => {
     switch (query.action) {
         case 'humedad': {
             //TODO: guardar en la db
+
+            const coll = database.collection("humedad")
+            coll.insertOne(query)
 
             io.emit('humedad', query);
             //mandar evento
