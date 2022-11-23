@@ -8,7 +8,7 @@ const io = require("socket.io")(3001, {
     }
 });
 
-const port = 3000;
+const port = 443;
 
 
 
@@ -22,11 +22,21 @@ app.listen(port, function () {
     console.log("Started application on port %d", port)
 });
 
-app.post('/api/getdata', (req, res) => {
+app.get('/api/webhook', (req, res) => {
 
+    // const socket = new io.Socket();
+    const {query} = req;
     //q:req.query
-    io.emit('newRandom', {rand: Math.random()*1000})
+    switch (query.action) {
+        case 'humedad': {
+            //TODO: guardar en la db
 
-    res.send(200, req.query);
+            io.emit('humedad', query);
+            //mandar evento
+            break;
+        }
+    }
+
+    res.send(200, 1);
 
 })

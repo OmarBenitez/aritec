@@ -33,9 +33,9 @@ app.controller('indexCtrl', ['$http', '$scope', 'socket', ($http, $scope, socket
 
     }
 
-    socket.on('newRandom', (obj) => {
+    socket.on('humedad', (obj) => {
 
-        $scope.todaysMoney = obj.rand;
+        console.log(obj);
 
     })
 
