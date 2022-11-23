@@ -28,21 +28,11 @@ app.listen(port, function () {
 
 app.get('/api/webhook', (req, res) => {
 
-    // const socket = new io.Socket();
     const {query} = req;
-    //q:req.query
-    switch (query.action) {
-        case 'humedad': {
-            //TODO: guardar en la db
+    const coll = database.collection(query.action)
+    coll.insertOne(query)
 
-            const coll = database.collection("humedad")
-            coll.insertOne(query)
-
-            io.emit('humedad', query);
-            //mandar evento
-            break;
-        }
-    }
+    io.emit(query.action, query);
 
     res.send(200, 1);
 
