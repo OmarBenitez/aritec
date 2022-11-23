@@ -30,9 +30,9 @@ app.get('/api/webhook', (req, res) => {
 
     const {query} = req;
     const coll = database.collection(query.action)
-    coll.insertOne(query)
+    coll.insertOne({...query, timestamp: new Date()})
 
-    io.emit(query.action, query);
+    io.emit(query.action, {...query, timestamp: new Date()});
 
     res.send(200, 1);
 
