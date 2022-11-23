@@ -2,7 +2,7 @@
 const app = angular.module('appSensores', []);
 
 app.factory('socket', function ($rootScope) {
-    var socket = io.connect('localhost:3001');
+    var socket = io.connect('185.28.23.41:3001');
     return {
         on: function (eventName, callback) {
             socket.on(eventName, function () {
