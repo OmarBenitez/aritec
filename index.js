@@ -26,6 +26,20 @@ app.listen(port, function () {
     console.log("Started application on port %d", port)
 });
 
+app.get('/api/getCaudalKPIs', (req, res) => {
+
+    var coll = database.collection('caudal');
+    coll.find({ }).sort({timestamp: -1}).limit(10).toArray(function (e, d) {
+
+        if(e) {
+            res.send(500,e);
+        } else {
+            res.send(200,d);
+        }
+
+    })
+})
+
 app.get('/api/webhook', (req, res) => {
 
     const {query} = req;
