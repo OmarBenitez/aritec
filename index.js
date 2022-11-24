@@ -43,11 +43,27 @@ app.get('/api/getCaudalKPIs', (req, res) => {
 app.get('/api/webhook', (req, res) => {
 
     const {query} = req;
+
+    if(query.action === 'caudal') {
+        const coll = database.collection(query.action);
+        const d = new Date();
+        coll.find({ year: d.getFullYear(), month: d.getMonth()+1, day:d.getDate()}).toArray((e,d) => {
+
+            if(d.length === 0) {
+                coll.insertOne({...query, timestamp: new Date(), year: new Date().getFullYear(), month: new Date().getMonth()+1, day: new Date().getDate()})
+            }
+
+        })
+
+        io.emit(query.action, {...query, timestamp: new Date()});
+        res.send(200, 1);
+    }
+
     const coll = database.collection(query.action)
     if(query.save) {
-        coll.insertOne({...query, timestamp: new Date()})
+        coll.insertOne({...query, timestamp: new Date(), year: new Date().getFullYear(), month: new Date().getMonth()+1, day: new Date().getDate()})
     }
-    io.emit(query.action, {...query, timestamp: new Date()});
+    io.emit(query.action, {...query, timestamp: new Date(), year: new Date().getFullYear(), month: new Date().getMonth()+1, day: new Date().getDate()});
 
     res.send(200, 1);
 
