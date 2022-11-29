@@ -1,6 +1,8 @@
 const express = require("express")
 const app = express()
 const path = require('path');
+const ExcelJS = require('exceljs');
+
 const io = require("socket.io")(3001, {
     cors: {
         origin: "*",
@@ -66,5 +68,47 @@ app.get('/api/webhook', (req, res) => {
     io.emit(query.action, {...query, timestamp: new Date(), year: new Date().getFullYear(), month: new Date().getMonth()+1, day: new Date().getDate()});
 
     res.send(200, 1);
+
+})
+
+app.get('/reports/getCaudalReport', (req, res) => {
+
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = 'Shay';
+    workbook.lastModifiedBy = 'Shay';
+    workbook.created = new Date();
+    workbook.modified = new Date();
+
+    const sheet = workbook.addWorksheet('Reporte');
+
+    sheet.getCell('A1').value = "ARITECT Reporte de Caudal";
+
+    sheet.getCell('A3').value = "Fecha";
+    sheet.getCell('B3').value = "Promedio de Caudal";
+
+    var coll = database.collection('caudal');
+    coll.find({ }).sort({timestamp: -1}).limit(10).toArray(function (e, d) {
+        if(e) {
+            res.send(500,e);
+        } else {
+
+            var r=4;
+            for(var _ of d) {
+                sheet.getCell('A'+r).value = new Date(_.timestamp);
+                sheet.getCell('B'+r).value = Number(_.QT);
+
+                r++;
+            }
+
+            res.set({
+                'Content-Disposition': 'attachment; filename="ARITEC - Report Caudal '+(new Date().toLocaleDateString())+'.xlsx',
+                'Content-Type': "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+
+            workbook.xlsx.write(res)
+        }
+    });
+
+;
 
 })
