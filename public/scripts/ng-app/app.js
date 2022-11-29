@@ -35,6 +35,8 @@ app.controller('indexCtrl', ['$http', '$scope', 'socket', ($http, $scope, socket
     $scope.g3Deg =0;
     $scope.g4Percent=0;
     $scope.g4Deg =0;
+    $scope.g5Percent=0;
+    $scope.g5Deg =0;
 
     $scope.init = function(){
         $scope.todaysMoney = Math.random()*1000;
@@ -68,6 +70,11 @@ app.controller('indexCtrl', ['$http', '$scope', 'socket', ($http, $scope, socket
         if(obj.H4 && Number(obj.H4)) {
             $scope.g4Percent = obj.H4 > 100 ? 100 : obj.H4;
             $scope.g4Deg = 180*$scope.g4Percent/100;
+        }
+
+        if(obj.H5 && Number(obj.H5)) {
+            $scope.g5Percent = obj.H5 > 100 ? 100 : obj.H5;
+            $scope.g5Deg = 180*$scope.g5Percent/100;
         }
 
     })
