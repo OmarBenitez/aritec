@@ -110,7 +110,7 @@ app.controller('indexCtrl', ['$http', '$scope', 'socket', ($http, $scope, socket
             data: {
                 labels: data.map(_ => _.d.toLocaleDateString()),
                 datasets: [{
-                    label: "Caudal por Semana",
+                    label: "Caudal por Día",
                     tension: 0.4,
                     borderWidth: 0,
                     pointRadius: 0,
